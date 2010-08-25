@@ -21,7 +21,10 @@
 #include <QWidget>
 #include <QLabel>
 
+#include <QProcess>
 
+// Use xwininfo to get wid
+// FIXME: Some place will not update ;(
 
 class MApplication : public QApplication {
     Q_OBJECT
@@ -48,9 +51,13 @@ public:
                                            CompositeRedirectAutomatic);
         }
 
-        // hard code: replace your wID pls!!;0)
-        //
-        wId = 0x3c0006f;
+        // Get wid
+        QProcess xwininfo;
+        xwininfo.start("xwininfo");
+        xwininfo.waitForFinished();
+        QByteArray output = xwininfo.readAllStandardOutput();
+        wId = output.split(':').at(3).split(' ').at(1).toULong(0, 16);
+
         ::XGetWindowAttributes(dpy, wId, &attr);
 
         format = ::XRenderFindVisualFormat(dpy, attr.visual);
