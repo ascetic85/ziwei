@@ -1,0 +1,35 @@
+案例1:
+
+Qt 中自定义很多Widget，并且这些Widget 需要动态改变属性的（宽/高/颜色/坐标
+等等）。
+Qt 不推荐多重继承，和元数据有关系？？
+
+做一个类StyleSheet 来组装styleSheet，类里有一个hash表，存储styleSheet的
+关键字。
+
+代码：
+class Stylesheet : public QWidget
+{
+public:
+    QString sheet() {
+        return m_sheet.values();
+    }
+    QHash *m_sheet;
+};
+
+class CustomWidget : public QWidget
+{
+public:
+    StyleSheet *sheet;
+};
+
+
+// How to use
+{
+    CustomWidget *custom;
+    StyleSheet *sheet = custom.sheet;
+    sheet.insert(key, value);
+    custom.setStyleSheet(sheet.sheet());
+}
+
+组合胜于继承？

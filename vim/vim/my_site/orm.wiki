@@ -1,0 +1,6 @@
+  * browse(cr, uid, ids)
+        得到对象， 可以用. 操作符取值(包括one2many类型)
+  * search(cr, uid, context={'key':value})
+        得到id列表，[id1, id2, ... , idn] 可给browse 使用
+  * read: [{'key': [v1, v2]},{'key2': [v1, v2]}]
+        `self.read(cr, uid, [inv.id], ['invoice_line'])[0]['invoice_line']`

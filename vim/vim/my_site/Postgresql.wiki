@@ -1,0 +1,10 @@
+=== Export ===
+    * ubuntu$ pg_dump singapore -h 10.31.26.8 -U openpg -E UTF8 -f singapore.sql
+
+=== Import ===
+    * 修改singapore.sql 替换:%s/openpg/ubuntu/g
+      ubuntu$ createdb test
+      ubuntu$ psql -d test -U ubuntu -f ./singapore.sql
+
+=== insert ===
+    * insert info res_roles_users_rel values(rid,uid) (select id,4 from res_users);

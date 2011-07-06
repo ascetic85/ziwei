@@ -1,0 +1,106 @@
+hg 版本 421
+第一次发短信出现
+--------------------------------------------------------------------------------------------
+[11:05:34]  Set a initialized Config Struct to User
+[11:05:34]  Initialize ssi authentication action
+[11:05:34]  Start ssi login with v3Temp password , user number 13880493255
+[11:05:35]  SSI login success
+[11:05:35]  Load user information
+[11:05:36]  Load user information
+[11:05:36]  Load contact list
+[11:05:36]  Set a initialized Sip Struct to User
+[11:05:36]  Initialize sipc registeration action
+[11:05:36]  Start registering to sip server(115.181.16.64:8080)
+[11:05:36]  Register to sip server success
+[11:05:36]  nonce:2A52DFD52CB059EB4558D09E460C0519
+[11:05:36]  Start encrypting response
+[11:05:36]  Encrypting reponse success
+[11:05:36]  Initialize sipc authencation action
+[11:05:36]  Start sipc authentication , with ak-value
+[11:05:36]  Got sipc response
+*** glibc detected *** cliofetion: free(): corrupted unsorted chunks: 0x099631c8 ***
+======= Backtrace: =========
+/lib/tls/i686/cmov/libc.so.6(+0x6b591)[0xb7284591]
+/lib/tls/i686/cmov/libc.so.6(+0x6cde8)[0xb7285de8]
+/lib/tls/i686/cmov/libc.so.6(cfree+0x6d)[0xb7288ecd]
+/usr/lib/libofetion.so.1(sipc_aut_action+0x4cc)[0xb76eb3cc]
+cliofetion(fx_login+0x21c)[0x80495bc]
+cliofetion(main+0x1ec)[0x804997c]
+/lib/tls/i686/cmov/libc.so.6(__libc_start_main+0xe6)[0xb722fbd6]
+cliofetion[0x8049141]
+======= Memory map: ========
+08048000-0804a000 r-xp 00000000 08:08 297578     /usr/bin/cliofetion
+0804a000-0804b000 r-xp 00001000 08:08 297578     /usr/bin/cliofetion
+0804b000-0804c000 rwxp 00002000 08:08 297578     /usr/bin/cliofetion
+09945000-099a7000 rwxp 00000000 00:00 0          [heap]
+b6800000-b6821000 rwxp 00000000 00:00 0 
+b6821000-b6900000 ---p 00000000 00:00 0 
+b6971000-b698e000 r-xp 00000000 08:08 1048659    /lib/libgcc_s.so.1
+b698e000-b698f000 r-xp 0001c000 08:08 1048659    /lib/libgcc_s.so.1
+b698f000-b6990000 rwxp 0001d000 08:08 1048659    /lib/libgcc_s.so.1
+b6990000-b6991000 ---p 00000000 00:00 0 
+b6991000-b7191000 rwxp 00000000 00:00 0 
+b7191000-b71a1000 r-xp 00000000 08:08 1049112    /lib/tls/i686/cmov/libresolv-2.11.1.so
+b71a1000-b71a2000 r-xp 00010000 08:08 1049112    /lib/tls/i686/cmov/libresolv-2.11.1.so
+b71a2000-b71a3000 rwxp 00011000 08:08 1049112    /lib/tls/i686/cmov/libresolv-2.11.1.so
+b71a3000-b71a5000 rwxp 00000000 00:00 0 
+b71be000-b71c0000 rwxp 00000000 00:00 0 
+b71c0000-b71d5000 r-xp 00000000 08:08 1049111    /lib/tls/i686/cmov/libpthread-2.11.1.so
+b71d5000-b71d6000 r-xp 00014000 08:08 1049111    /lib/tls/i686/cmov/libpthread-2.11.1.so
+b71d6000-b71d7000 rwxp 00015000 08:08 1049111    /lib/tls/i686/cmov/libpthread-2.11.1.so
+b71d7000-b71d9000 rwxp 00000000 00:00 0 
+b71d9000-b71fd000 r-xp 00000000 08:08 1048947    /lib/tls/i686/cmov/libm-2.11.1.so
+b71fd000-b71fe000 r-xp 00023000 08:08 1048947    /lib/tls/i686/cmov/libm-2.11.1.so
+b71fe000-b71ff000 rwxp 00024000 08:08 1048947    /lib/tls/i686/cmov/libm-2.11.1.so
+b71ff000-b7212000 r-xp 00000000 08:08 1048774    /lib/libz.so.1.2.3.3
+b7212000-b7213000 r-xp 00012000 08:08 1048774    /lib/libz.so.1.2.3.3
+b7213000-b7214000 rwxp 00013000 08:08 1048774    /lib/libz.so.1.2.3.3
+b7214000-b7215000 rwxp 00000000 00:00 0 
+b7215000-b7217000 r-xp 00000000 08:08 1048946    /lib/tls/i686/cmov/libdl-2.11.1.so
+b7217000-b7218000 r-xp 00001000 08:08 1048946    /lib/tls/i686/cmov/libdl-2.11.1.so
+b7218000-b7219000 rwxp 00002000 08:08 1048946    /lib/tls/i686/cmov/libdl-2.11.1.so
+b7219000-b736c000 r-xp 00000000 08:08 1048943    /lib/tls/i686/cmov/libc-2.11.1.so
+b736c000-b736d000 ---p 00153000 08:08 1048943    /lib/tls/i686/cmov/libc-2.11.1.so
+b736d000-b736f000 r-xp 00153000 08:08 1048943    /lib/tls/i686/cmov/libc-2.11.1.so
+b736f000-b7370000 rwxp 00155000 08:08 1048943    /lib/tls/i686/cmov/libc-2.11.1.so
+b7370000-b7373000 rwxp 00000000 00:00 0 
+b7375000-b7379000 r-xp 00000000 08:08 1048951    /lib/tls/i686/cmov/libnss_dns-2.11.1.so
+b7379000-b737a000 r-xp 00004000 08:08 1048951    /lib/tls/i686/cmov/libnss_dns-2.11.1.so
+b737a000-b737b000 rwxp 00005000 08:08 1048951    /lib/tls/i686/cmov/libnss_dns-2.11.1.so
+b737b000-b737d000 r-xp 00000000 08:08 1048697    /lib/libnss_mdns4_minimal.so.2
+b737d000-b737e000 r-xp 00001000 08:08 1048697    /lib/libnss_mdns4_minimal.so.2
+b737e000-b737f000 rwxp 00002000 08:08 1048697    /lib/libnss_mdns4_minimal.so.2
+b737f000-b7389000 r-xp 00000000 08:08 1049106    /lib/tls/i686/cmov/libnss_files-2.11.1.so
+b7389000-b738a000 r-xp 00009000 08:08 1049106    /lib/tls/i686/cmov/libnss_files-2.11.1.so
+b738a000-b738b000 rwxp 0000a000 08:08 1049106    /lib/tls/i686/cmov/libnss_files-2.11.1.so
+b738b000-b738c000 rwxp 00000000 00:00 0 
+b738c000-b740c000 r-xp 00000000 08:08 266072     /usr/lib/libsqlite3.so.0.8.6
+b740c000-b740d000 r-xp 0007f000 08:08 266072     /usr/lib/libsqlite3.so.0.8.6
+b740d000-b740e000 rwxp 00080000 08:08 266072     /usr/lib/libsqlite3.so.0.8.6
+b740e000-b740f000 rwxp 00000000 00:00 0 
+b740f000-b7549000 r-xp 00000000 08:08 1049328    /lib/libcrypto.so.0.9.8
+b7549000-b7551000 r-xp 00139000 08:08 1049328    /lib/libcrypto.so.0.9.8
+b7551000-b755f000 rwxp 00141000 08:08 1049328    /lib/libcrypto.so.0.9.8
+b755f000-b7562000 rwxp 00000000 00:00 0 
+b7562000-b75a6000 r-xp 00000000 08:08 1049329    /lib/libssl.so.0.9.8
+b75a6000-b75a7000 r-xp 00044000 08:08 1049329    /lib/libssl.so.0.9.8
+b75a7000-b75aa000 rwxp 00045000 08:08 1049329    /lib/libssl.so.0.9.8
+b75aa000-b75ab000 rwxp 00000000 00:00 0 
+b75ab000-b76cf000 r-xp 00000000 08:08 275109     /usr/lib/libxml2.so.2.7.6
+b76cf000-b76d0000 ---p 00124000 08:08 275109     /usr/lib/libxml2.so.2.7.6
+b76d0000-b76d4000 r-xp 00124000 08:08 275109     /usr/lib/libxml2.so.2.7.6
+b76d4000-b76d5000 rwxp 00128000 08:08 275109     /usr/lib/libxml2.so.2.7.6
+b76d5000-b76d6000 rwxp 00000000 00:00 0 
+b76d6000-b76f8000 r-xp 00000000 08:08 271185     /usr/lib/libofetion.so.1.0.0
+b76f8000-b76f9000 r-xp 00021000 08:08 271185     /usr/lib/libofetion.so.1.0.0
+b76f9000-b76fa000 rwxp 00022000 08:08 271185     /usr/lib/libofetion.so.1.0.0
+b76fa000-b76fc000 rwxp 00000000 00:00 0 
+b76fc000-b76fd000 r-xp 00000000 00:00 0          [vdso]
+b76fd000-b7718000 r-xp 00000000 08:08 1048601    /lib/ld-2.11.1.so
+b7718000-b7719000 r-xp 0001a000 08:08 1048601    /lib/ld-2.11.1.so
+b7719000-b771a000 rwxp 0001b000 08:08 1048601    /lib/ld-2.11.1.so
+bfe3d000-bfe52000 rw-p 00000000 00:00 0          [stack]
+Aborted
+--------------------------------------------------------------------------------------------------
+
+应该是断错误了

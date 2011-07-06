@@ -1,0 +1,4 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_1='/home/svn/openerp/openerp-server-5.0.10/bin/addons/cybercom_issue_11'
+let g:netrw_dirhist_2='/home/svn/openerp/openerp-server-5.0.10/bin/addons/cybercom_issue_10'

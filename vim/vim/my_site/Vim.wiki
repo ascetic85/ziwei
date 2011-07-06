@@ -1,0 +1,12 @@
+=== 插件 ===
+    * NERD_tree: 浏览系统文件
+    * vim-taglist: 浏览方法
+    * comments.vim: C-c 注释, C-x 反注释
+
+=== 操作===
+    * 窗口切换
+        * C-w-w: 循环切换窗口
+        * C-w-[h/j/k/l]: 左/上/下/右
+
+    * 复制粘
+        * vim之间: 浏览模式下选择, C-S-c/C-g 复制, S-insert 粘贴

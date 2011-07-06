@@ -1,0 +1,1 @@
+* 查看网卡数据: sudo tcpdump -i eth0 -X -nn -s 0 src 10.31.26.8

@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="Stylesheet" type="text/css" href="style.css">
+<title>OpenERP</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+
+<p>
+<a href="orm.html">orm</a>
+</p>
+
+<h3 id="toc_0.0.1">Field</h3>
+<ul>
+<li>
+数据库中不会插入字段 -- function, one2many
+
+</ul>
+
+<h3 id="toc_0.0.2">Invoice</h3>
+<ul>
+<li>
+How to Reopen: 1. Journal 可以被cancel 2. Entry 里面把勾销的A× 删除
+
+</ul>
+
+<h3 id="toc_0.0.3">方法</h3>
+<ul>
+<li>
+browse: 出来是对象/对象列表(one2many), 可以object.contract_ids[0].currency_id
+
+<li>
+read: [{'key': [v1, v2]},{'key2': [v1, v2]}]
+            <code>self.read(cr, uid, [inv.id], ['invoice_line'])[0]['invoice_line']</code>
+
+</ul>
+
+<h3 id="toc_0.0.4">远程调试</h3>
+<ul>
+<li>
+openser-server.py -r role -w password --db_host=x.x.x.x , 很方便
+
+</ul>
+
+<h3 id="toc_0.0.5">Tree</h3>
+<ul>
+<li>
+点击Tree 的第一个field，能够与form 切换
+
+</ul>
+
+<h3 id="toc_0.0.6">Role</h3>
+<ul>
+<li>
+不只在*_workflow.xml定义, process 也可以定义, 而且优先级更高
+<pre>
+    hr_timesheet_sheet/process/hr_timesheet_sheet_process.xml:146
+
+    &lt;record id="res_roles_hr0" model="res.roles"&gt;
+        &lt;field eval="&amp;quot;&amp;quot;&amp;quot;HR&amp;quot;&amp;quot;&amp;quot;" name="name"/&gt;
+    &lt;/record&gt;
+
+    &lt;record id="hr_timesheet_sheet.t1" model="workflow.transition"&gt;
+        &lt;field name="role_id" ref="res_roles_hr0"/&gt;
+    &lt;/record&gt;
+
+</pre>
+
+</ul>
+
+<h3 id="toc_0.0.7">wizard</h3>
+<ul>
+<li>
+Assign a wizard view and fields in dynamic way (<a href="http://www.openerp.com/forum/topic14680.html">http://www.openerp.com/forum/topic14680.html</a>)
+<pre>
+states = {'init': {
+'actions': [_get_defaults],
+'result': {'type': 'form', 'arch': form, 'fields': fields, 'state':[('end','Cancel'), ('send','Send')]}
+},}
+
+Way 1(Wizard 里用):
+def _get_defaults(self, cr, user, data, context):
+    self.states['init']['result']['arch'] =  '''&lt;?xml version="1.0"?&gt;&lt;!-- My new view --&gt;'''
+    self.states['init']['result']['fields']['my_new_field'] = {'string':'My field', 'type':'boolean'}
+
+Way 2(视图通用): 
+缺点: 不能获取字段值，通过值来动态定义view
+def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
+    result = super(ir_model_grid, self).fields_get(cr, uid, fields, context)
+    groups = self.pool.get('res.groups').search(cr, uid, [])
+    groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
+    result['group_0'] = {'string': 'All Users','type': 'char','size': 7}
+    for group in groups_br:
+        result['group_%d'%group.id] = {'string': '%s'%group.name,'type': 'char','size': 7}
+    return result
+
+def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
+    result = super(ir_model_grid, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar)
+    groups = self.pool.get('res.groups').search(cr, uid, [])
+    groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
+    cols = ['model', 'name']
+    xml = '''&lt;?xml version="1.0"?&gt;
+        &lt;%s editable="bottom"&gt;
+        &lt;field name="name" select="1" readonly="1" required="1"/&gt;
+        &lt;field name="model" select="1" readonly="1" required="1"/&gt;
+        &lt;field name="group_0"/&gt;
+        ''' % (view_type,)
+    for group in groups_br:
+        xml += '''&lt;field name="group_%d"/&gt;''' % (group.id, )
+    xml += '''&lt;/%s&gt;''' % (view_type,)
+    result['arch'] = xml
+    result['fields'] = self.fields_get(cr, uid, cols, context)
+    return result
+</pre>
+
+</ul>
+
+<h3 id="toc_0.0.8">security</h3>
+<ul>
+<li>
+控制访问全局timesheets/expenses/contracts
+    <a href="OpenERP.html">OpenERP</a> 里面只提供了对menu 的访问控制, 如hr_expense 模块:
+<pre>
+&lt;menuitem
+    action="expense_all"
+    id="menu_expense_all"
+    parent="next_id_49"
+    groups="hr.group_hr_manager"/&gt;
+</pre>
+    定义只有HR / Manager 才能看见菜单, 但是通过更改url, 普通用户也可以拿到菜单
+    也就是说上面的代码控制的是可见性, 而不是安全性.
+
+</ul>
+<blockquote>
+重新定义search 可以达到控制安全访问.
+获取menu的id FROM ir_model_data:
+</blockquote>
+<pre>
+menu_id = select res_id from ir_model_data where name='menu_expense_all' and module='hr_expense' and model='ir.ui.menu';
+</pre>
+<blockquote>
+获取可以访问menu_id 的gid FROM ir_ui_menu_group_rel:
+</blockquote>
+<pre>
+gids = select gid from ir_ui_menu_group_rel where menu_id=menu_id;   
+</pre>
+<blockquote>
+<a href="OpenERP.html">OpenERP</a> 本身提供了两种检查uid 是否属于某组里面:
+</blockquote>
+<ul>
+<li>
+self.pool.get('ir.model.access').check_groups(cr,uid,group),         #uid 在'hr.group_hr_manager' ?
+
+<li>
+self.pool.get('ir.model.access').check_group(self, cr, uid, model, mode, group_ids) # 没能懂;(
+
+</ul>
+<blockquote>
+ir_model.py: 
+</blockquote>
+<pre>
+def check_groups(self, cr, uid, group):
+    res = False
+    grouparr  = group.split('.')
+    if not grouparr:
+        return False
+
+    cr.execute("select 1 from res_groups_users_rel where uid=%s and gid in(select res_id from ir_model_data where module=%s and name=%s)", (uid, grouparr[0], grouparr[1],))
+    return bool(cr.fetchone())
+</pre>
+<blockquote>
+而我们需要的是检查uid是否在gids 里面:
+</blockquote>
+<pre>
+def my_check_groups(self, cr, uid, gids):
+    cr.execute("select 1 from res_groups_users_rel where uid=%s and gid in(%s)", (uid, gids))
+    return bool(cr.fetchone())
+</pre>
+<blockquote>
+完整代码如下:
+</blockquote>
+<pre>
+
+def search(self, cr, uid, args, offset=0, limit=None, order=None,
+        context=None, count=False):
+    menu_id = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'menu_expense_all'),
+                    ('module', '=', 'hr_expense'), ('model', '=', 'ir.ui.menu')])
+    gids = self.pool.get('ir.ui.menu.group.rel').search(cr, uid, [('menu_id', '=', menu_id)])
+    is_manager = self.my_check_groups(cr, uid, gids)
+    only_self = ('user_id','=',uid)
+    if not is_manager:
+        if not (only_self in args):
+            args.append(only_self)
+    return super(hr_expense_expense, self).search(cr, uid, args, offset, limit,
+            order, context=context, count=count)
+</pre>
+
+</body>
+</html>

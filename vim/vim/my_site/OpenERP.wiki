@@ -1,0 +1,136 @@
+[[orm]]
+
+=== Field ===
+    * 数据库中不会插入字段 -- function, one2many
+
+=== Invoice ===
+    * How to Reopen: 1. Journal 可以被cancel 2. Entry 里面把勾销的A× 删除
+
+=== 远程调试 ===
+    * openser-server.py -r role -w password --db_host=x.x.x.x , 很方便
+
+=== Tree ===
+    * 点击Tree 的第一个field，能够与form 切换
+
+=== Role ===
+    * 不只在*_workflow.xml定义, process 也可以定义, 而且优先级更高
+    {{{
+        hr_timesheet_sheet/process/hr_timesheet_sheet_process.xml:146
+
+        <record id="res_roles_hr0" model="res.roles">
+            <field eval="&quot;&quot;&quot;HR&quot;&quot;&quot;" name="name"/>
+        </record>
+
+        <record id="hr_timesheet_sheet.t1" model="workflow.transition">
+            <field name="role_id" ref="res_roles_hr0"/>
+        </record>
+
+    }}}
+
+=== wizard ===
+    * Assign a wizard view and fields in dynamic way (http://www.openerp.com/forum/topic14680.html)
+    {{{
+    states = {'init': {
+    'actions': [_get_defaults],
+    'result': {'type': 'form', 'arch': form, 'fields': fields, 'state':[('end','Cancel'), ('send','Send')]}
+    },}
+
+    Way 1(Wizard 里用):
+    def _get_defaults(self, cr, user, data, context):
+        self.states['init']['result']['arch'] =  '''<?xml version="1.0"?><!-- My new view -->'''
+        self.states['init']['result']['fields']['my_new_field'] = {'string':'My field', 'type':'boolean'}
+
+    Way 2(视图通用): 
+    缺点: 不能获取字段值，通过值来动态定义view
+    def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
+        result = super(ir_model_grid, self).fields_get(cr, uid, fields, context)
+        groups = self.pool.get('res.groups').search(cr, uid, [])
+        groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
+        result['group_0'] = {'string': 'All Users','type': 'char','size': 7}
+        for group in groups_br:
+            result['group_%d'%group.id] = {'string': '%s'%group.name,'type': 'char','size': 7}
+        return result
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
+        result = super(ir_model_grid, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar)
+        groups = self.pool.get('res.groups').search(cr, uid, [])
+        groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
+        cols = ['model', 'name']
+        xml = '''<?xml version="1.0"?>
+            <%s editable="bottom">
+            <field name="name" select="1" readonly="1" required="1"/>
+            <field name="model" select="1" readonly="1" required="1"/>
+            <field name="group_0"/>
+            ''' % (view_type,)
+        for group in groups_br:
+            xml += '''<field name="group_%d"/>''' % (group.id, )
+        xml += '''</%s>''' % (view_type,)
+        result['arch'] = xml
+        result['fields'] = self.fields_get(cr, uid, cols, context)
+        return result
+    }}}
+
+=== security ===
+    * 控制访问全局timesheets/expenses/contracts
+    OpenERP 里面只提供了对menu 的访问控制, 如hr_expense 模块:
+    {{{
+    <menuitem
+        action="expense_all"
+        id="menu_expense_all"
+        parent="next_id_49"
+        groups="hr.group_hr_manager"/>
+    }}}
+    定义只有HR / Manager 才能看见菜单, 但是通过更改url, 普通用户也可以拿到菜单
+    也就是说上面的代码控制的是可见性, 而不是安全性.
+
+    重新定义search 可以达到控制安全访问.
+    获取menu的id FROM ir_model_data:
+    {{{
+    menu_id = select res_id from ir_model_data where name='menu_expense_all' and module='hr_expense' and model='ir.ui.menu';
+    }}}
+    
+    获取可以访问menu_id 的gid FROM ir_ui_menu_group_rel:
+    {{{
+    gids = select gid from ir_ui_menu_group_rel where menu_id=menu_id;   
+    }}}
+
+    OpenERP 本身提供了两种检查uid 是否属于某组里面:
+    - self.pool.get('ir.model.access').check_groups(cr,uid,group),         #uid 在'hr.group_hr_manager' ?
+    - self.pool.get('ir.model.access').check_group(self, cr, uid, model, mode, group_ids) # 没能懂;(
+
+    ir_model.py: 
+    {{{
+    def check_groups(self, cr, uid, group):
+        res = False
+        grouparr  = group.split('.')
+        if not grouparr:
+            return False
+
+        cr.execute("select 1 from res_groups_users_rel where uid=%s and gid in(select res_id from ir_model_data where module=%s and name=%s)", (uid, grouparr[0], grouparr[1],))
+        return bool(cr.fetchone())
+    }}}
+
+    而我们需要的是检查uid是否在gids 里面:
+    {{{
+    def my_check_groups(self, cr, uid, gids):
+        cr.execute("select 1 from res_groups_users_rel where uid=%s and gid in(%s)", (uid, gids))
+        return bool(cr.fetchone())
+    }}}
+
+
+    完整代码如下:
+    {{{
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        menu_id = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'menu_expense_all'),
+                        ('module', '=', 'hr_expense'), ('model', '=', 'ir.ui.menu')])
+        gids = self.pool.get('ir.ui.menu.group.rel').search(cr, uid, [('menu_id', '=', menu_id)])
+        is_manager = self.my_check_groups(cr, uid, gids)
+        only_self = ('user_id','=',uid)
+        if not is_manager:
+            if not (only_self in args):
+                args.append(only_self)
+        return super(hr_expense_expense, self).search(cr, uid, args, offset, limit,
+                order, context=context, count=count)
+    }}}

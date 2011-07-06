@@ -1,0 +1,108 @@
+==== email ====
+    {{{
+
+    import smtplib
+    s=smtplib.SMTP()
+    s.set_debuglevel(1)
+    s.connect('webmail.cn.cybercomgroup.com','25')
+    s.starttls()
+    s.login('sgxjira','s1ng@p0r3.j1r2$#@!')
+
+    }}}
+
+==== Function ====
+    - map(exp, a): 把a的每一个元素按exp格式为一个列表
+    {{{
+    map(str, [1,2]) -> ['1', '2']
+    map(lambda x: [0,0,x],[1,2]) -> [[0, 0, 1], [0, 0, 2]]
+    }}}
+
+==== dict ====
+    - dict['key']['sub'] = 'value'
+        当'key' 不存在时, 会出错, 保险方法
+        {{{
+        1.
+        if not dict.haskey('key'):
+            dict['key'] = {}
+        dict['key']['sub']='value'
+
+        2.
+        dict.setdefault('key', {})
+        dict['key']['sub']='value'
+        }}}
+
+==== object ====
+
+==== 内置函数 ====
+    - setattr(self, key, value)
+  
+    可以通过设置类的属性来动态关联/设置object (ORM里面有更多体现)
+    {{{
+    class Foo(object):
+        def __init__(self):
+            print '__init__'
+
+    ids = []
+    for x in range(5):
+        t = Foo()
+        setattr(t, 'name', x)
+        ids.append(t)
+
+    foo = Foo()
+    setattr(foo, 'ids', ids)
+    
+    for x in foo.ids:
+        print x.name
+    }}}
+    更多例子请看py-mini-orm
+
+    - __getattr__(self)
+
+    当读取对象的某属性时, python会自动调用__getattr__
+
+    - __getitem__(self,name)
+
+    如果类把某个属性定义为序列, 可以使用__getitem__() 输出列表属性中的某个元素.
+    只要重新定义了__getitem__(self,name), 就能够使用self[name] (暂时还不知道机制)
+    {{{
+    #!/usr/bin/python
+    # -*- coding: UTF-8 -*-
+    class FruitShop:
+         def __getitem__(self, i):      # 获取水果店的水果
+             return self.fruits[i]      
+    if __name__ == "__main__":
+        shop = FruitShop()
+        shop.fruits = ["apple", "banana"]
+        print shop[1]
+        for item in shop:               # 输出水果店的水果
+            print item,
+    输出为:
+    banana
+    apple banana
+    }}}
+
+    再看另外一个例子:
+    {{{
+    #!/usr/bin/python
+    # -*- coding: UTF-8 -*-
+    class Foo(object):
+        def __init__(self):
+            ids = [0]*4
+            self._data = {'id':1, 'emp':ids}
+            print '__init__'
+
+        def __getitem__(self, name): # 使得self[name] 可以调用
+            print '__getitem__', name
+            return self._data[name]
+
+
+        def __getattr__(self, name): # 使得obj.id 可以返回正确值
+            print '__getattr__' , name
+            return self[name]
+
+
+    foo = Foo()
+    print foo.id
+    print foo.emp
+    }}}
+    具体应用请看OpenERP 的orm.py 的 browse_record 类
