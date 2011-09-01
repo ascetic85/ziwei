@@ -106,3 +106,19 @@
     print foo.emp
     }}}
     具体应用请看OpenERP 的orm.py 的 browse_record 类
+
+
+==== function ====
+    * def fun(a, L=[]): 默认参数**只初始化一次**!!
+    {{{
+    def fun(a, L=[]):
+        L.append(a)
+        return L
+
+    print (f(1)) # [1]
+    print (f(2)) # [1, 2]
+    print (f(3)) # [1, 2, 3]
+
+    }}}   
+    但是def fun(a, L=None) 就能每次都初始化一个实例
+

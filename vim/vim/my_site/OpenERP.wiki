@@ -1,5 +1,12 @@
 [[orm]]
 
+[[How to close period]]
+
+[[How to create Menu and Action]]
+
+[[How to create view]]
+
+[[Class]]
 === Field ===
     * 数据库中不会插入字段 -- function, one2many
 
@@ -134,3 +141,5 @@
         return super(hr_expense_expense, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
     }}}
+
+

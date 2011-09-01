@@ -1,5 +1,7 @@
 OpenERP
 
+OpenERP6
+
 [[Vim]]
 
 [[Postgresql]]
