@@ -1,0 +1,29 @@
+XML 给多个group定义规则
+------------------------
+    <record id="property_rule_request_um" model="ir.rule">
+        <field name="name">Manager Recruit Request UM</field>
+        <field model="ir.model" name="model_id" ref="model_hr_recruit_request"/>
+        <field name="domain_force">[('department_id.manager_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_unit_manager')),(4,ref('base.group_unit_manager'))]"/>  <!-- 这里 -->
+    </record>
+
+
+不同group 的规则是OR 方式叠加的 v6.0.3
+--------------------------------------
+group_employee  : [(a)]
+group_project_manager: ['|','&',(b),(c)]
+    应用到PM 的规则是: (a) '|' ((b) '&' (c) )
+
+
+one2many
+---------
+两class都得定义
+class hr_employee(osv.osv):
+    _inherit = 'hr.employee'
+    ....
+    'foo': fields.many2one('foo', 'Foo'
+
+class Foo(osv.osv):
+    _name = 'foo'
+    ....
+    'ids':fields.one2many('hr.employee', 'obj', 'Employees'),

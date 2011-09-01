@@ -1,0 +1,25 @@
+- View
+
+    节选cybercom_payroll_view.xml
+    @id     : 系统唯一, 定义为view_cybercom_payslip_line_tree 时, [[How to create Menu and Action]]
+              章节的action可以不指定view_id, 系统会查找和res_model相关联的view
+    @name   : 系统唯一
+    @model  : 类名 xx.yy
+    @type   : 列表/表单 (tree/form)
+    @arch   : type="xml" 固定
+    @tree   : string: 行头显示名, colors="blue:salary==0": 定义记录的颜色
+{{{
+        <record id="view_cybercom_payslip_line_my_tree" model="ir.ui.view">
+            <field name="name">cybercom.payslip.line.tree</field>
+            <field name="model">cybercom.payslip.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <!--<tree string="Slip/Salary Lines" colors="blue:state=='normal';red:state=='error'">-->
+                <tree string="Slip/Salary Lines" colors="red:salary==0">
+                    <field name="name"/>
+                    <field name="number"/>
+                    <field name="salary"/>
+                </tree>
+            </field>
+        </record>
+}}}

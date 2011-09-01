@@ -1,0 +1,8 @@
+* How to close period
+    - Financial Management -> Configuration -> Financial Accounting -> Periods -> Periods -> [Choose One record]
+      -> Click on "Close a Period" -> Check this Box -> Close Period
+
+* How to open period
+    <U will need "Period" role>
+    - Financial Management -> Configuration -> Financial Accounting -> Periods -> Periods -> [Edit on record]
+      -> "Set to Draft"

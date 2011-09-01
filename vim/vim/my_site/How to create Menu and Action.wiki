@@ -1,0 +1,50 @@
+- 创建跟菜单
+    @model  : "ir.ui.menu" 固定语句
+    @id     : 菜单标识, 系统唯一
+    @name   : 菜单名字
+    @groups : 组要求
+
+{{{
+    <record model="ir.ui.menu" id="menu_xx_main">
+        <field name="name">XX</field>
+    </record>
+}}}
+
+- 创建Action
+
+    @model      : "ir.actions.act_window" 固定语句
+    @id         : 动作标识, 系统唯一
+    @name       : ??
+    @res_model  : 类名
+    @view_type  : ??
+    @view_mode  : 显示顺序: 先列表后表单(tree,form), 先表单后列表(form,tree)
+    @view_id    : ref="", 使用某view显示
+    @domain     : 过滤条件
+{{{
+    <record model="ir.actions.act_window" id="action_xx_yy">
+        <field name="name">Menu</field>
+        <field name="res_model">class</field>
+
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_xx_tree"/>
+        <!--<field name="domain">[('shenqr.user_id','=',uid)]</field>-->
+    </record>
+}}}
+
+- 创建子菜单
+
+    @name       : 菜单名字
+    @parent     : 上级
+    @id         : 菜单标识, 系统唯一
+    @action     : 点击菜单所触发的action 
+    @groups     : 组要求
+{{{
+    <menuitem  
+        name="Menu"  
+        parent="menu_xx_main"
+        id="menu_xx_yy"  
+        action="action_xx_yy"
+        groups="hr.group_hr_user"
+        />
+}}}

@@ -1,0 +1,12 @@
+- class 定义
+class hr_analytic_timesheet(osv.osv):
+    _name = "hr.analytic.timesheet"                 # 必须, 给被人继承时使用
+    _table = "hr.analytic.timesheet"                # ??
+    _description = "Timesheet line"                 # ??
+    _inherits = {'account.analytic.line': 'line_id'} # 没有见过,
+                                                     #一直都是类继承
+                                                     # 类中的字段也可以 ?
+    _order = 'id desc'                              # 显示顺序
+    _columns = {
+        'line_id' : fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade'),
+    }
