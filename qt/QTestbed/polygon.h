@@ -13,6 +13,9 @@ public:
     ~Polygon();
 
     QSize sizeHint() const;
+    bool replaceVertex(QPoint orgin, QPoint newOne);
+
+    QPolygon polygon;
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -23,7 +26,7 @@ private slots:
     void addVertex(QPoint v);
 
 private:
-    QPolygon m_polygon;
+
     QList<VertexWidget*> m_vertexWidgets;
 };
 

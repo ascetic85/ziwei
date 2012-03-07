@@ -7,7 +7,7 @@
 
 #include "Box2D/Box2D.h"
 #include "gl/glu.h"
-#include "gl/glut.h"
+//#include "gl/glut.h"
 
 /// Test settings. Some can be controlled in the GUI.
 struct Settings

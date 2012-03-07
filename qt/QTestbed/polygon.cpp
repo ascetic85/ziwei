@@ -23,15 +23,16 @@ void Polygon::paintEvent(QPaintEvent *)
 {
     QPainter p(this);
     p.setPen(Qt::red);
-    p.drawPolygon(QPolygon(m_polygon));
+    p.drawPolygon(QPolygon(polygon));
 }
 
 void Polygon::addVertex(QPoint v)
 {
-    m_polygon.append(v);
+    polygon.append(v);
     update();
 
     VertexWidget *w = new VertexWidget(this, parentWidget());
+    w->setVertex(v);
     m_vertexWidgets.append(w);
     w->move(pos()+v);
     w->show();
@@ -40,7 +41,19 @@ void Polygon::addVertex(QPoint v)
 
 QSize Polygon::sizeHint() const
 {
-    return m_polygon.boundingRect().size();
+    return polygon.boundingRect().size();
+}
+
+bool Polygon::replaceVertex(QPoint orgin, QPoint newOne)
+{
+    bool ret = false;
+    int index = polygon.indexOf(orgin);
+    if (index >= 0 && index < polygon.size()) {
+        polygon.replace(index, newOne);
+        update();
+        ret = true;
+    }
+    return ret;
 }
 
 /*

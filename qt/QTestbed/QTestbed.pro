@@ -16,14 +16,20 @@ SOURCES += main.cpp\
     vertexwidget.cpp \
     canvas.cpp \
     shape.cpp \
-    polygon.cpp
+    polygon.cpp \
+    graphics.cpp \
+    qtpolygon.cpp \
+    qtpoint.cpp
 
 HEADERS  += mainwindow.h \
     widget.h \
     vertexwidget.h \
     canvas.h \
     shape.h \
-    polygon.h
+    polygon.h \
+    graphics.h \
+    qtpolygon.h \
+    qtpoint.h
 
 FORMS    += mainwindow.ui
 
